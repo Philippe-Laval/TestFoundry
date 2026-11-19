@@ -8,6 +8,8 @@ using System.Text;
 using RunStatus = Azure.AI.Agents.Persistent.RunStatus;
 
 // https://github.com/Azure/azure-sdk-for-net/blob/main/sdk/ai/Azure.AI.Projects/samples/Sample6_ClassicAgents.md
+// Attention : classic agents are deprecated and will be removed in a future release.
+// Please use persistent agents instead (see AgentManager.cs).
 
 namespace TestFoundry
 {

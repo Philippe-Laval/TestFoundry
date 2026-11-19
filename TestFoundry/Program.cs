@@ -1,4 +1,8 @@
-﻿using OpenAI.Chat;
+﻿using Azure.AI.Projects.Memory;
+using OpenAI.Chat;
+
+#pragma warning disable AAIP001
+#pragma warning disable OPENAI001
 
 namespace TestFoundry
 {
@@ -21,6 +25,14 @@ namespace TestFoundry
                 Console.WriteLine("Please set the FOUNDRY_PROJECT_ENDPOINT, FOUNDRY_MODEL_NAME, EMBEDDING_FOUNDRY_MODEL_NAME, and CONNECTION_NAME environment variables.");
                 return;
             }
+
+            //MemoryStoreManager memoryStoreManager = new MemoryStoreManager(endpoint, modelNameForAgent, modelNameForEmbedding);
+            //await memoryStoreManager.CreateMemoryStore("testMemoryStore", "Memory store demo.");
+            // MemoryStore memoryStore = await memoryStoreManager.GetMemoryStore("testMemoryStore");
+            //await memoryStoreManager.AddInformationInMemoryStore("testMemoryStore", "Flower", "My favourite flower is Cephalocereus euphorbioides.");
+            //await memoryStoreManager.QuestionTheMemoryStore("testMemoryStore", "Flower", "What is my favourite flower?");
+            //await memoryStoreManager.DeleteMemoryStore("testMemoryStore");
+
 
             AgentManager agentManager = new AgentManager(endpoint, modelNameForAgent);
 
