@@ -16,13 +16,20 @@ namespace TestFoundry
 {
     public class ConnectionTester
     {
+        private readonly string _endpoint;
+        private readonly string _deploymentName;
+        private readonly string _connectionName;
+
+        public ConnectionTester(string endpoint, string deploymentName, string connectionName)
+        {
+            _endpoint = endpoint;
+            _deploymentName = deploymentName;
+            _connectionName = connectionName;
+        }
+
         public async Task TestConnectionAsync()
         {
-            var endpoint = Environment.GetEnvironmentVariable("FOUNDRY_PROJECT_ENDPOINT")
-                ?? throw new InvalidOperationException("FOUNDRY_PROJECT_ENDPOINT is not set.");
-            var deploymentName = Environment.GetEnvironmentVariable("FOUNDRY_MODEL") ?? "gpt-5.4-mini";
-            var connectionName = Environment.GetEnvironmentVariable("CONNECTION_NAME");
-            AIProjectClient projectClient = new AIProjectClient(new Uri(endpoint), new DefaultAzureCredential());
+            AIProjectClient projectClient = new AIProjectClient(new Uri(_endpoint), new DefaultAzureCredential());
 
             Console.WriteLine("List the properties of all connections:");
             await foreach (AIProjectConnection connection in projectClient.Connections.GetConnectionsAsync())
@@ -37,12 +44,12 @@ namespace TestFoundry
                 Console.WriteLine(connection);
             }
 
-            Console.WriteLine($"Get the properties of a connection named `{connectionName}`:");
-            AIProjectConnection specificConnection = await projectClient.Connections.GetConnectionAsync(connectionName, includeCredentials: false);
+            Console.WriteLine($"Get the properties of a connection named `{_connectionName}`:");
+            AIProjectConnection specificConnection = await projectClient.Connections.GetConnectionAsync(_connectionName, includeCredentials: false);
             Console.WriteLine(specificConnection);
 
             Console.WriteLine("Get the properties of a connection with credentials:");
-            AIProjectConnection specificConnectionCredentials = await projectClient.Connections.GetConnectionAsync(connectionName, includeCredentials: true);
+            AIProjectConnection specificConnectionCredentials = await projectClient.Connections.GetConnectionAsync(_connectionName, includeCredentials: true);
             Console.WriteLine(specificConnectionCredentials);
 
             Console.WriteLine($"Get the properties of the default connection:");

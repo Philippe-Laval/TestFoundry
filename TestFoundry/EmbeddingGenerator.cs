@@ -1,7 +1,7 @@
 ﻿using Azure.AI.OpenAI;
 using Azure.AI.Projects;
 using Azure.Identity;
-using OpenAI.Chat;
+using OpenAI.Embeddings;
 using System;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
@@ -9,16 +9,18 @@ using System.Text;
 
 // https://github.com/Azure/azure-sdk-for-net/blob/main/sdk/ai/Azure.AI.Projects/samples/Sample7_CreateClients.md
 
+// text-embedding-3-large
+// Generated embedding with 3072 dimensions
+
 namespace TestFoundry
 {
-    internal class ChatClientTester
+    internal class EmbeddingGenerator
     {
-        public async Task Test()
+        private readonly EmbeddingClient _embeddingsClient;
+
+        public EmbeddingGenerator(string endpoint, string embeddingModelName)
         {
-            var endpoint = System.Environment.GetEnvironmentVariable("FOUNDRY_PROJECT_ENDPOINT");
-            var modelName = System.Environment.GetEnvironmentVariable("FOUNDRY_MODEL_NAME");
-            var connectionName = System.Environment.GetEnvironmentVariable("CONNECTION_NAME");
-            Console.WriteLine("Create the Azure OpenAI chat client");
+            Console.WriteLine("Create the Azure OpenAI embedding client");
             var credential = new DefaultAzureCredential();
             AIProjectClient projectClient = new AIProjectClient(new Uri(endpoint), credential);
 
@@ -31,12 +33,15 @@ namespace TestFoundry
             uri = new Uri($"https://{uri.Host}");
 
             AzureOpenAIClient azureOpenAIClient = new AzureOpenAIClient(uri, credential);
-            ChatClient chatClient = azureOpenAIClient.GetChatClient(deploymentName: modelName);
-
-            Console.WriteLine("Complete a chat");
-            ChatCompletion result = await chatClient.CompleteChatAsync("List all the rainbow colors");
-            Console.WriteLine(result.Content[0].Text);
+            _embeddingsClient = azureOpenAIClient.GetEmbeddingClient(deploymentName: embeddingModelName);
         }
 
+        public async Task<ReadOnlyMemory<float>> GetEmbedding(string input)
+        {
+            Console.WriteLine($"Generate an embedding for {input}");
+            OpenAIEmbedding result = await _embeddingsClient.GenerateEmbeddingAsync(input);
+            Console.WriteLine($"Generated embedding with {result.ToFloats().Length} dimensions");
+            return result.ToFloats();
+        }
     }
 }
