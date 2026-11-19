@@ -22,8 +22,28 @@ namespace TestFoundry
                 return;
             }
 
+            AgentManager agentManager = new AgentManager(endpoint, modelNameForAgent);
+
+            // OpenAI, xAI
+            List<string> deploymentsForOpenAI = await agentManager.GetDeploymentsForPublisher("OpenAI");
+            foreach (var deployment in deploymentsForOpenAI)
+            {
+                Console.WriteLine($"Deployment: {deployment}");
+            }
+
+            List<string> deployments = await agentManager.GetDeployments();
+            foreach (var deployment in deployments)
+            {
+                Console.WriteLine($"Deployment: {deployment}");
+            }
+
+            await agentManager.GetDeploymentDetails("gpt-5.4-mini");
+
+
+            await agentManager.CreateAgents();
+
             PersistentAgentGenerator persistentAgentTester = new PersistentAgentGenerator(endpoint, modelNameForAgent);
-            await persistentAgentTester.Test();
+            await persistentAgentTester.GetAnswerFromAgent();
 
 
             ChatCompletionGenerator chatClientTester = new ChatCompletionGenerator(endpoint, modelName);

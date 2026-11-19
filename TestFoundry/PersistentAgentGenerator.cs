@@ -37,7 +37,7 @@ namespace TestFoundry
             return agent;
         }
 
-        public async Task Test()
+        public async Task GetAnswerFromAgent()
         {
             PersistentAgentThread? thread = null;
             ThreadRun? run = null;
